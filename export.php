@@ -4,21 +4,21 @@ class ControllerProductExport extends Controller {
 
 	public function index() {
 		
-	$xml = new DomDocument('1.0', 'utf-8'); //создаем новый экземпляр<
+	$xml = new DomDocument('1.0', 'utf-8');
 
-	$rss = $xml->appendChild($xml->createElement('rss')); // добавляем тег rss
+	$rss = $xml->appendChild($xml->createElement('rss'));
 
-	$rss->setAttribute('version', '2.0'); //атрибуты
+	$rss->setAttribute('version', '2.0');
 
-	$rss->setAttribute('xmlns:g', 'http://base.google.com/ns/1.0');//атрибуты/
+	$rss->setAttribute('xmlns:g', 'http://base.google.com/ns/1.0');
 
 	$main_title = $rss->appendChild($xml->createElement('title'));
 
-	$main_title->appendChild($xml->createTextNode('Фид данных Merchant Center'));
+	$main_title->appendChild($xml->createTextNode('Feed Merchant Center'));
 
 	$main_link = $rss->appendChild($xml->createElement('link'));
 
-	$main_link->appendChild($xml->createTextNode('https://ukspar.ua/'));
+	$main_link->appendChild($xml->createTextNode('https://yoursitename.domain/'));
 
 	$main_desc = $rss->appendChild($xml->createElement('description'));
 
@@ -35,7 +35,7 @@ class ControllerProductExport extends Controller {
 		foreach ($results as $result) {
 
 				if ($result['image']) {
-					$image = 'https://ukspar.ua/image/' . $result['image'];
+					$image = 'https://yoursitename.domain/image/' . $result['image'];
 				}
   
 
@@ -45,6 +45,7 @@ class ControllerProductExport extends Controller {
 			$category_info = $this->model_catalog_product->getCategories($result['product_id']);
 
 			$product_type = 'Главная';
+			
 			foreach ($category_info as $category_info1) {
 				$category_id = $category_info1['category_id'];
 				$category_infos1 = $this->model_catalog_category->getCategory($category_id);
@@ -102,22 +103,19 @@ class ControllerProductExport extends Controller {
 
 			$mpns->appendChild($xml->createTextNode($mpn));
 
-			}
+		}
 
+			$xml->formatOutput = true;
 
-
-
-			$xml->formatOutput = true; #-> устанавливаем выходной формат документа в true
-
-$xml->save('feed.xml');
+                        $xml->save('feed.xml');
 
 			if($xml->save('feed.xml')) {
 
-			echo 'Обновление фида завершилось успешно!';
+			echo 'Success feed create!';
 
 			}else {
 
-			echo "Не удалось сохранить файл фида данных. Возможно у файла не достаточно прав доступа";
+			echo "Failed to save data feed file. The file may not have enough permissions.";
 
 			}
 
@@ -126,7 +124,6 @@ $xml->save('feed.xml');
 }
 
 ?>
-			<a href="feed.xml">здесь</a>
 
 
 		
